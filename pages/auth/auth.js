@@ -1,3 +1,4 @@
+
 const logins = [
    {
       username: 'valeria123',
@@ -13,28 +14,33 @@ const logins = [
    }
 ]
 
-if(window.localStorage.getItem('client') !== null){
-   const client = JSON.parse(window.localStorage.getItem('client'));
+if(window.localStorage.getItem('username') !== null){
+   const usernameSt = window.localStorage.getItem('username');
+   const passwordSt = window.localStorage.getItem('password');
    const username = document.querySelector('#username');
    const password = document.querySelector('#password');
    
-   username.value = client.username;
-   password.value = client.password;
+   username.value = usernameSt;
+   password.value = passwordSt;
 }
 
 function wrongInput(obj){
-   obj.style['background-color'] = 'rgb(231, 104, 104)';
+   console.log('here')
+   obj.style.border = 'none';
+   obj.style.backgroundColor = 'red';
 }
 
-function resetInput(obj){
-   obj.style.border = 'none';
-   obj.style['background-color'] = 'rgb(206, 230, 168)';
+function focusin(e){
+   e.target.style.backgroundColor = '#BFACE2'
 }
 
 function login(){
    const username = document.querySelector('#username');
    const password = document.querySelector('#password');
    
+   username.addEventListener('focusin', focusin);
+   password.addEventListener('focusin', focusin);
+
    if(username.value === "" && password.value === ""){
       wrongInput(username); wrongInput(password);
    }
@@ -49,10 +55,18 @@ function login(){
          else if(username.value === log.username) fuser = 1;
          else if(password.value === log.password) fpass = 1;
       });
-      if(fuser && fpass)
-         window.location = '../home.html'
-      else if(fuser) wrongInput(fpass);
-      else if(fpass) wrongInput(fuser);
+      console.log(fuser, fpass);
+      if(fuser && fpass){
+         window.localStorage.setItem('username', username.value);
+         window.localStorage.setItem('password', password.value);
+         window.location = '../home.html';
+      }
+         
+      else if(fuser) wrongInput(password);
+      else if(!fuser){
+         wrongInput(username);
+         wrongInput(password);
+      }
    }
 }
 
